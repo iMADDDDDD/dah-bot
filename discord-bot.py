@@ -11,6 +11,7 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 client = discord.Client()
 
 
+# Testing webhook :)
 @client.event
 async def on_message(message):
     # we do not want the bot to reply to itself

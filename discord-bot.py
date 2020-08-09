@@ -17,20 +17,19 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if message.content == 'DAH':
-        flights = data.search_request(message.content)
+    flights = data.search_request(message.content)
 
-        embed = discord.Embed(title="You searched " +
-                              message.content, color=0x00ff00)
+    embed = discord.Embed(title="You searched " +
+                          message.content, color=0x00ff00)
 
-        for flight in flights:
-            msg = flight.get('from') + " to " + flight.get('to') + \
-                " | Plane: " + flight.get('plane') + " - " + \
-                flight.get('plane_type')
-            embed.add_field(name=flight.get('callsign'),
-                            value=msg, inline=False)
+    for flight in flights:
+        msg = flight.get('from') + " to " + flight.get('to') + \
+            " | Plane: " + flight.get('plane') + " - " + \
+            flight.get('plane_type')
+        embed.add_field(name=flight.get('callsign'),
+                        value=msg, inline=False)
 
-        await message.channel.send(embed=embed)
+    await message.channel.send(embed=embed)
 
 
 @client.event

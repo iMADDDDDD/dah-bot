@@ -1,7 +1,7 @@
 import requests
 import time
 import json
-import auth
+import twitter.auth as auth
 
 
 def get_coordinate(ne_lng, ne_lat, sw_lng, sw_lat, interval):

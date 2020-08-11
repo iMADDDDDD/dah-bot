@@ -1,8 +1,10 @@
 import requests
 import json
-
+import time
 import auth
 import utils
+from concurrent.futures import ProcessPoolExecutor as PoolExecutor
+
 
 Country = {
     'ne_lat': 89.000000,
@@ -23,25 +25,18 @@ def tweet(item):
         "\nPlane type: " + \
         item.get('plane_type') + " | Registration: " + \
         item.get('plane_registration') + \
-        "\nAccessible here: https://flightradar24.com/" + item.get('id')
+        "\nAccessible here: https://flightradar24.com/" + \
+        item.get('id') + "\n #FlightEmergency #FlightRadar24"
 
     bot = auth.twitter_authenticate()
-
-    print(bot.verify_credentials())
     bot.update_status(message)
     pass
 
 
-# Verify squawk code
-def check_squawk(data):
-    for item in data:
-        if item.get('squawk') == '7700':
-            tweet(item)
-
-
 # Performs operation
 def perform_check():
-    squawks = []
+    all_data = []
+    urls = []
     new_data = utils.get_coordinate(interval=10, **Country)
     for data in new_data:
         ne_lat = str(data.get('ne_lat')) + ","
@@ -52,28 +47,20 @@ def perform_check():
         bounds = ne_lat + sw_lat + ne_lng + sw_lng
 
         full_url = url + bounds + params
-        data = utils.make_request(full_url)
+        urls.append(full_url)
 
-        for key, value in data.items():
-            if not isinstance(value, int):
-                if list(value)[0] != 'total':
-                    items = {
-                        'id': key,
-                        'squawk': list(value)[6],
-                        'registration': list(value)[0],
-                        'plane_type': list(value)[8],
-                        'plane_registration': list(value)[9],
-                        'from': list(value)[11],
-                        'to': list(value)[12],
-                        'flight': list(value)[13]
-                    }
-                    squawks.append(items)
+    with PoolExecutor(max_workers=20) as executor:
+        for data in executor.map(utils.make_request, urls):
+            all_data.append(data)
+            pass
 
-    unique_squawks = [i for n, i in enumerate(
-        squawks) if i not in squawks[n + 1:]]
-    check_squawk(unique_squawks)
+    print(len(all_data))
+    processed_data = utils.process_data(data)
     pass
 
 
 if __name__ == '__main__':
+    start = time.time()
     perform_check()
+    end = time.time()
+    print(str(end - start))

@@ -1,5 +1,7 @@
 import requests
 import json
+import time
+import twitter
 
 
 def get_coordinate(ne_lng, ne_lat, sw_lng, sw_lat, interval):
@@ -31,10 +33,41 @@ def get_coordinate(ne_lng, ne_lat, sw_lng, sw_lat, interval):
 def make_request(url):
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36"}
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, stream=True)
     data = response.text
     data = json.loads(data)
     return data
+
+
+# Verify squawk code
+def check_squawk(data):
+    for item in data:
+        if item.get('squawk') == '7700':
+            twitter.tweet(item)
+    pass
+
+
+# Process data
+def process_data(data):
+    squawks = []
+    for key, value in data.items():
+        if not isinstance(value, int):
+            if list(value)[0] != 'total':
+                items = {
+                    'id': key,
+                    'squawk': list(value)[6],
+                    'registration': list(value)[0],
+                    'plane_type': list(value)[8],
+                    'plane_registration': list(value)[9],
+                    'from': list(value)[11],
+                    'to': list(value)[12],
+                    'flight': list(value)[13]
+                }
+                squawks.append(items)
+        unique_squawks = [i for n, i in enumerate(
+            squawks) if i not in squawks[n + 1:]]
+
+    return unique_squawks
 
 
 # Checks if fields empty

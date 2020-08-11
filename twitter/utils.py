@@ -57,7 +57,6 @@ def check_squawk(item):
 
 # Process data
 def process_data(data):
-    squawks = []
     for key, value in data.items():
         if not isinstance(value, int):
             if list(value)[0] != 'total':

@@ -42,7 +42,7 @@ def check_squawk(data):
 # Performs operation
 def perform_check():
     squawks = []
-    new_data = utils.get_coordinate(interval=100, **Country)
+    new_data = utils.get_coordinate(interval=10, **Country)
     for data in new_data:
         ne_lat = str(data.get('ne_lat')) + ","
         sw_lat = str(data.get('sw_lat')) + ","

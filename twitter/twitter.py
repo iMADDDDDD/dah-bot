@@ -42,7 +42,7 @@ def perform_check():
             all_data.append(data)
             pass
 
-    # Processes on the
+    # Processes on the fly
     for flight in all_data:
         processed_data = utils.process_data(flight)
     pass

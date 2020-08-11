@@ -36,8 +36,9 @@ def tweet(item):
 # Performs operation
 def perform_check():
     all_data = []
+    keys = []
     urls = []
-    new_data = utils.get_coordinate(interval=10, **Country)
+    new_data = utils.get_coordinate(interval=5, **Country)
     for data in new_data:
         ne_lat = str(data.get('ne_lat')) + ","
         sw_lat = str(data.get('sw_lat')) + ","
@@ -49,13 +50,13 @@ def perform_check():
         full_url = url + bounds + params
         urls.append(full_url)
 
-    with PoolExecutor(max_workers=20) as executor:
+    with PoolExecutor(max_workers=40) as executor:
         for data in executor.map(utils.make_request, urls):
             all_data.append(data)
             pass
 
-    print(len(all_data))
-    processed_data = utils.process_data(data)
+    for f in all_data:
+        processed_data = utils.process_data(f)
     pass
 
 

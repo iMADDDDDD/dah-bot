@@ -2,6 +2,10 @@ import requests
 import json
 import time
 import twitter
+from collections import Counter
+from itertools import chain
+
+plane_id = ""
 
 
 def get_coordinate(ne_lng, ne_lat, sw_lng, sw_lat, interval):
@@ -41,13 +45,19 @@ def make_request(url):
 
 # Verify squawk code
 def check_squawk(item):
-    if item.get('squawk') == '7700':
-        twitter.tweet(item)
+    global plane_id
+
+    # Avoids duplicate IDs
+    if plane_id == item.get('id'):
+        if item.get('squawk') == '7700':
+            plane_id = item.get('id')
+            twitter.tweet(item)
     pass
 
 
 # Process data
 def process_data(data):
+    squawks = []
     for key, value in data.items():
         if not isinstance(value, int):
             if list(value)[0] != 'total':

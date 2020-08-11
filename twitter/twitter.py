@@ -33,7 +33,7 @@ def tweet(item):
     pass
 
 
-# Performs operation
+# Performs operation check
 def perform_check():
     all_data = []
     keys = []

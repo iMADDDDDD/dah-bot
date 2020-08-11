@@ -40,16 +40,14 @@ def make_request(url):
 
 
 # Verify squawk code
-def check_squawk(data):
-    for item in data:
-        if item.get('squawk') == '7700':
-            twitter.tweet(item)
+def check_squawk(item):
+    if item.get('squawk') == '7700':
+        twitter.tweet(item)
     pass
 
 
 # Process data
 def process_data(data):
-    squawks = []
     for key, value in data.items():
         if not isinstance(value, int):
             if list(value)[0] != 'total':
@@ -63,11 +61,8 @@ def process_data(data):
                     'to': list(value)[12],
                     'flight': list(value)[13]
                 }
-                squawks.append(items)
-        unique_squawks = [i for n, i in enumerate(
-            squawks) if i not in squawks[n + 1:]]
-
-    return unique_squawks
+                check_squawk(items)
+    pass
 
 
 # Checks if fields empty

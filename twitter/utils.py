@@ -27,6 +27,7 @@ def get_coordinate(ne_lng, ne_lat, sw_lng, sw_lat, interval):
 
 
 # Makes request to the flightradar24 service
+# Multithreading
 def make_request(url):
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36"}

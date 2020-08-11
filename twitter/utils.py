@@ -1,13 +1,8 @@
-import requests
-import json
-import time
-import twitter
-from collections import Counter
-from itertools import chain
-
+# Defining global variable
 plane_id = ""
 
 
+# Splits the world map into squares
 def get_coordinate(ne_lng, ne_lat, sw_lng, sw_lat, interval):
     interval = float(interval)
 
@@ -32,30 +27,35 @@ def get_coordinate(ne_lng, ne_lat, sw_lng, sw_lat, interval):
     ]
 
 
-# Makes request to the flightradar24 service
-# Multithreading
-def make_request(url):
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36"}
-    response = requests.get(url, headers=headers, stream=True)
-    data = response.text
-    data = json.loads(data)
-    return data
-
-
 # Verify squawk code
 def check_squawk(item):
     global plane_id
 
     # Avoids duplicate IDs
-    if plane_id == item.get('id'):
+    if plane_id != item.get('id'):
         if item.get('squawk') == '7700':
             plane_id = item.get('id')
-            twitter.tweet(item)
+            tweet(item)
     pass
 
 
-# Process data
+# Tweet the shit
+def tweet(item):
+    item = utils.make_empty_check(item)
+    message = "! General emergency !\nFlight number: " + item.get('flight') + "\nFrom " + \
+        item.get('from') + " to " + item.get('to') + \
+        "\nPlane type: " + \
+        item.get('plane_type') + " | Registration: " + \
+        item.get('plane_registration') + \
+        "\nAccessible here: https://flightradar24.com/" + \
+        item.get('id') + "\n #FlightEmergency #FlightRadar24"
+
+    bot = auth.twitter_authenticate()
+    bot.update_status(message)
+    pass
+
+
+# Processes data / Bullshit returned by FR24
 def process_data(data):
     for key, value in data.items():
         if not isinstance(value, int):
@@ -74,7 +74,7 @@ def process_data(data):
     pass
 
 
-# Checks if fields empty
+# Checks if any field is empty, fills it if true
 def make_empty_check(item):
     flight = item.get('flight')
     plane_from = item.get('from')

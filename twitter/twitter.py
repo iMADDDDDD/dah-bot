@@ -2,6 +2,7 @@ import json
 import time
 import utils
 import requestHandler
+import pandas as pd
 
 from concurrent.futures import ProcessPoolExecutor as PoolExecutor
 
@@ -21,20 +22,9 @@ params = "&faa=1&satellite=1&mlat=1&flarm=1&adsb=1&gnd=1&air=1&vehicles=0&estima
 # Tweets if true
 def perform_check():
     all_data = []
-    urls = []
 
-    new_data = utils.get_coordinate(interval=5, **Country)
-
-    for data in new_data:
-        ne_lat = str(data.get('ne_lat')) + ","
-        sw_lat = str(data.get('sw_lat')) + ","
-        ne_lng = str(data.get('ne_lng')) + ","
-        sw_lng = str(data.get('sw_lng'))
-
-        bounds = ne_lat + sw_lat + ne_lng + sw_lng
-
-        full_url = url + bounds + params
-        urls.append(full_url)
+    dataset = pd.read_csv('twitter/urls.csv')
+    urls = dataset['url'].values
 
     # Async requests
     with PoolExecutor(max_workers=40) as executor:
@@ -49,4 +39,6 @@ def perform_check():
 
 
 if __name__ == '__main__':
+    start = time.time()
     perform_check()
+    print(str(time.time() - start))

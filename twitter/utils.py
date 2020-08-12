@@ -1,3 +1,5 @@
+import auth
+
 # Defining global variable
 plane_id = ""
 
@@ -33,7 +35,8 @@ def check_squawk(item):
 
     # Avoids duplicate IDs
     if plane_id != item.get('id'):
-        if item.get('squawk') == '7700':
+        if item.get('squawk') == '0535':
+            print("Tweeting...")
             plane_id = item.get('id')
             tweet(item)
     pass
@@ -41,8 +44,8 @@ def check_squawk(item):
 
 # Tweet the shit
 def tweet(item):
-    item = utils.make_empty_check(item)
-    message = "! General emergency !\nFlight number: " + item.get('flight') + "\nFrom " + \
+    item = make_empty_check(item)
+    message = "GENERAL EMERGENCY\nFlight number: " + item.get('flight') + "\nFrom " + \
         item.get('from') + " to " + item.get('to') + \
         "\nPlane type: " + \
         item.get('plane_type') + " | Registration: " + \
@@ -51,7 +54,7 @@ def tweet(item):
         item.get('id') + "\n #FlightEmergency #FlightRadar24"
 
     bot = auth.twitter_authenticate()
-    bot.update_status(message)
+    bot.update_status(status=message)
     pass
 
 
@@ -82,6 +85,7 @@ def make_empty_check(item):
     plane_type = item.get('plane_type')
     plane_registration = item.get('plane_registration')
     flight_id = item.get('id')
+    registration = item.get('registration')
 
     if item.get('flight') == '' or item.get('flight') == None:
         flight = "N/A"

@@ -1,4 +1,5 @@
 import auth
+import pandas as pd
 
 # Defining global variable
 plane_id = ""
@@ -32,12 +33,17 @@ def get_coordinate(ne_lng, ne_lat, sw_lng, sw_lat, interval):
 # Verify squawk code
 def check_squawk(item):
     global plane_id
+    dataset = pd.read_csv('twitter/csv_id.csv')
+    plane_ids = dataset['id'].values
 
-    # Avoids duplicate IDs
-    if plane_id != item.get('id'):
-        if item.get('squawk') == '7700':
-            print("Tweeting...")
+    if item.get('squawk') == '7700':
+        if item.get('id') not in plane_ids:
             plane_id = item.get('id')
+            flight = {'id': plane_id}
+            df = pd.DataFrame(flight, columns=['id'])
+            df.to_csv('twitter/csv_id.csv')
+
+            print("Tweeting...")
             tweet(item)
     pass
 

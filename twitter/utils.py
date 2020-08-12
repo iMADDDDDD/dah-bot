@@ -35,7 +35,7 @@ def check_squawk(item):
 
     # Avoids duplicate IDs
     if plane_id != item.get('id'):
-        if item.get('squawk') == '0535':
+        if item.get('squawk') == '7700':
             print("Tweeting...")
             plane_id = item.get('id')
             tweet(item)

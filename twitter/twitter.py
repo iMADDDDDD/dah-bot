@@ -6,17 +6,6 @@ import pandas as pd
 
 from concurrent.futures import ProcessPoolExecutor as PoolExecutor
 
-# Defining global variables
-Country = {
-    'ne_lat': 89.000000,
-    'ne_lng': 179.000000,
-    'sw_lat': -89.000000,
-    'sw_lng': -179.000000
-}
-
-url = "https://data-live.flightradar24.com/zones/fcgi/feed.js?bounds="
-params = "&faa=1&satellite=1&mlat=1&flarm=1&adsb=1&gnd=1&air=1&vehicles=0&estimated=1&maxage=14400&gliders=1&stats=1&enc=k_l3Es3AsvJP4llucnl-vQF--32JyKB58SxmcaLb8LY"
-
 
 # Checks if any flight has 7700 as squawk code
 # Tweets if true

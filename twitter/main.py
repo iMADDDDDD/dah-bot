@@ -4,9 +4,11 @@ from handler import Handler
 from concurrent.futures import ProcessPoolExecutor as PoolExecutor
 
 import pandas as pd
+import time
 
 
-if __name__ == "__main__":
+# Defining main function
+def check_emergency():
     dataset = pd.read_csv('twitter/datasets/urls.csv')
     urls = dataset['url'].values
 
@@ -23,3 +25,11 @@ if __name__ == "__main__":
                         flight = Flight(key, data.get(key)[9], data.get(key)[8],
                                         data.get(key)[11], data.get(key)[12], data.get(key)[6], data.get(key)[13])
                         handler.tweet(flight)
+
+
+if __name__ == "__main__":
+    while(1):
+        start = time.time()
+        check_emergency()
+        print("[*] Took around: " + str(time.time() - start))
+        time.sleep(15)

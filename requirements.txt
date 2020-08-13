@@ -2,3 +2,4 @@ discord
 python-dotenv
 requests
 twython
+pandas

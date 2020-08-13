@@ -63,7 +63,7 @@ class Handler():
 
     # Handles duplicate flights
     def is_duplicate(self, flight_id):
-        dataset = pd.read_csv("twitter/datasets/flights_id.csv")
+        dataset = pd.read_csv("/root/dah-bot/twitter/datasets/flights_id.csv")
 
         try:
             ids = dataset['id'].values
@@ -74,7 +74,7 @@ class Handler():
             return True
         else:
             df = pd.DataFrame({'id': [flight_id]}, columns=['id'])
-            df.to_csv("twitter/datasets/flights_id.csv",
+            df.to_csv("/root/dah-bot/twitter/datasets/flights_id.csv",
                       header=False, mode='a', index=False)
             return False
 

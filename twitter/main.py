@@ -9,7 +9,7 @@ import time
 
 # Defining main function
 def check_emergency():
-    dataset = pd.read_csv('twitter/datasets/urls.csv')
+    dataset = pd.read_csv('/root/dah-bot/twitter/datasets/urls.csv')
     urls = dataset['url'].values
 
     handler = Handler()

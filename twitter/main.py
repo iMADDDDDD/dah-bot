@@ -21,7 +21,7 @@ def check_emergency():
         for data in executor.map(handler.request, urls):
             for key, value in data.items():
                 if isinstance(data.get(key), list):
-                    if data.get(key)[6] == '7700':
+                    if data.get(key)[6] == '6356':
                         flight = Flight(key, data.get(key)[9], data.get(key)[8],
                                         data.get(key)[11], data.get(key)[12], data.get(key)[6], data.get(key)[13])
                         handler.tweet(flight)

@@ -28,13 +28,7 @@ class Handler():
 
         flight = self.make_empty_check(data)
         if not self.is_duplicate(flight.flight_id):
-            message = "GENERAL EMERGENCY\nFlight number: " + str(flight.callsign) + "\nFrom " + \
-                str(flight.aircraft_from) + " to " + str(flight.aircraft_to) + \
-                "\nPlane type: " + \
-                str(flight.aircraft_type) + " | Registration: " + \
-                str(flight.aircraft_id) + \
-                "\nAccessible here: https://flightradar24.com/" + \
-                str(flight.flight_id) + "\n #FlightEmergency #FlightRadar24"
+            self.make_message(flight)
 
             print("[!] Tweeting...")
             bot.update_status(status=message)
@@ -80,6 +74,26 @@ class Handler():
             return True
         else:
             df = pd.DataFrame({'id': [flight_id]}, columns=['id'])
-            df.to_csv("twitter-oop/flights_id.csv",
+            df.to_csv("twitter/datasets/flights_id.csv",
                       header=False, mode='a', index=False)
             return False
+
+    # Tweet message
+    def make_message(self, flight):
+        if flight.callsign == "N/A":
+            message = "GENERAL EMERGENCY\nFlight number: " + str(flight.callsign) + "\nFrom " + \
+                str(flight.aircraft_from) + " to " + str(flight.aircraft_to) + \
+                "\nPlane type: " + \
+                str(flight.aircraft_type) + " | Registration: " + \
+                str(flight.aircraft_id) + \
+                "\nAccessible here: https://flightradar24.com/" + str(flight.flight_id) + \
+                "\n #FlightEmergency #FlightRadar24"
+        else:
+            message = "GENERAL EMERGENCY\nFlight number: " + str(flight.callsign) + "\nFrom " + \
+                str(flight.aircraft_from) + " to " + str(flight.aircraft_to) + \
+                "\nPlane type: " + \
+                str(flight.aircraft_type) + " | Registration: " + \
+                str(flight.aircraft_id) + \
+                "\nAccessible here: https://flightradar24.com/" + \
+                str(flight.callsign) + "/" + str(flight.flight_id) + \
+                "\n #FlightEmergency #FlightRadar24"

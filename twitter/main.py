@@ -9,12 +9,10 @@ import time
 
 # Defining main function
 def check_emergency():
-    dataset = pd.read_csv('/root/dah-bot/twitter/datasets/urls.csv')
+    dataset = pd.read_csv('twitter/datasets/urls.csv')
     urls = dataset['url'].values
 
     handler = Handler()
-
-    flight_id = None
 
     # Async requests
     with PoolExecutor(max_workers=40) as executor:
@@ -32,4 +30,4 @@ if __name__ == "__main__":
         start = time.time()
         check_emergency()
         print("[*] Took around: " + str(time.time() - start))
-        time.sleep(15)
+        time.sleep(10)
